@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlConfig>
+    <sqlInfo>
+        <driver>com.mysql.jdbc.Driver</driver>
+        <url>jdbc:mysql//localhost:8080/test</url>
+        <userName>root</userName>
+        <password>cpprootmysql</password>
+    </sqlInfo>
+</sqlConfig>

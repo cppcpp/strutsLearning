@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlConfig>
+    <sqlInfo>
+        <driver>oracle.jdbc.driver.OracleDriver</driver>
+        <url>jdbc:oracle:thin:@127.0.0.1:1521:XE</url>
+        <userName>system</userName>
+        <password>system</password>
+    </sqlInfo>
+</sqlConfig>

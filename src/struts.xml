@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+    
+    <!-- constant:该元素用于常量的配置        解决中文乱码    或者在struts.properties文件中配置
+    同时在struts.properties中配置常量，struts.properies文件的优先级高
+    常量优先级列表：struts-default.xml<struts-plugin.xml<struts.xml<struts.properties<web.xml
+ 推荐在struts.xml中配置常量，便于集中管理   -->
+   <constant name="struts.il8n.encoding" value="utf-8" />
+    
+ 	<!--  动态方法调用              禁用：false   可用：true -->
+   <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+   
+   	<!--struts找action，先在命名空间下面找，找不到再到默认命名空间下面找  -->
+    <!-- 根命名空间和默认命名空间区别：不能接受带有命名空间的URL请求 -->
+    <!-- include元素 :被包含的文件必须与struts.xml具有相同的格式-->
+    <include file="util.xml"/>
+		
+	<!--  登录业务包-->
+	<package name="login" extends="struts-default">
+		<interceptors>
+	    	<!--数据库拦截器 -->
+	        <interceptor name="DBIntercepter" class="com.cpp.interceptor.ParseDB">
+	   			<param name="dbConfigFile">dbconfig.properties</param>
+	        </interceptor>
+			<!-- 登录拦截器 -->
+			<interceptor name="LoginIntercepter" class="com.cpp.interceptor.LoginIntecepter">
+			    
+			</interceptor>
+		</interceptors>  
+		
+	    
+		<!-- 配置默认action -->
+	    <default-action-ref name="defaultAction" />
+		
+		<action name="login" class="com.cpp.action.LoginAction" method="loginIn">
+		   <!--重新发送请求 -->
+		   <result name="error"></result>
+		   <!--  <result name="success" type="chain">getMenuName</result> -->
+		   <result name="success" type="chain">
+		       <param name="actionName">classcheckAll</param>
+		   </result>
+		   <result name="loginRong">/login.jsp</result>
+		   <result name="CodeRong">/login.jsp</result>
+		   <result name="blacklist">/login.jsp</result>
+		   <!-- 引用数据库拦截器 -->
+		   <interceptor-ref name="DBIntercepter"/>
+		   <!-- 引用自定义拦截器，需再引用默认拦截器栈 -->
+		   <interceptor-ref name="defaultStack" />
+		   <!-- 引用登录拦截器 -->
+		   <interceptor-ref name="LoginIntercepter"/>
+		</action>
+		
+		<action name="defaultAction" class="com.cpp.action.DefaultAction">
+		    <result name="error">/404.html</result>
+		</action>
+		
+	</package>
+	
+	
+	<!--班级信息              待定：：：用json传值-->
+	<package name="manageClassInfo" extends="struts-default">
+	    <action name="classcheckAll" class="com.cpp.action.ClassAction" method="checkAll">
+	        <result name="success">/index.jsp</result>
+	    </action>
+	    <action name="classdelete" class="com.cpp.action.ClassAction" method="delete">
+	        
+	    </action>
+	    <action name="classmodify" class="com.cpp.action.ClassAction" method="modify">
+	        
+	    </action>
+	</package>
+	
+	<!-- PhoneGap平台的测试Action -->
+	<package name="PhoneGap" extends="struts-default">
+	    <action name="navigator" class="com.cpp.action.phonegap.Navigator">
+	    </action>
+	    
+	    <!-- 登录测试 -->
+	    <action  name="Plogin" class="com.cpp.action.phonegap.Plogin" method="login">
+	        
+	    </action>
+	    
+	    <!-- 测验 webWorkerAjax 的action -->
+	    <action name="webWorkerAjax" class="com.cpp.action.phonegap.WebWorkerTest" method="test">
+	        
+	    </action>
+	</package>
+	
+	<package name="file" extends="struts-default">
+	    <action name="fileUpload" class="com.cpp.action.FileUploadAction" method="fileUpload">
+	        <!-- 配置拦截————————struts自带拦截器 -->
+	      <interceptor-ref name="fileUpload">
+	          <!--  设置文件大小及类型      大小单位：Byte -->
+		        <param name="allowedTypes">
+		            image/bmp,image/pjpeg,image/png,iamge/jpg
+		        </param>
+		        <param name="maximumSize">100920</param>
+	       </interceptor-ref>
+	       <interceptor-ref name="defaultStack"></interceptor-ref>
+	       
+	        
+	        <param name="savePath">/MyUpload</param>
+	        <result name="success">/FileUpload.jsp</result>
+	        <result name="error">/FileUpload.jsp</result>
+	    </action>
+	</package>
+	
+</struts>    
